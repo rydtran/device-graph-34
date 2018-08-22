@@ -1,0 +1,14 @@
+text {
+    font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+.container {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
+
+.button-area {
+	margin: 10px;
+}

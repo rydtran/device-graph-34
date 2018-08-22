@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang = "en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>Device Graph</title>
+
+        <!-- jquery plugin -->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+
+        <!-- bootstrap plugin -->
+        <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap-theme.min.css">
+        <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+
+        <!-- tipusearch plugin -->
+        <script src="tipuesearch/tipuesearch_content.js"></script>
+        <script src="tipuesearch/tipuesearch_set.js"></script>
+        <script src="tipuesearch/tipuesearch.min.js"></script>
+
+        <!-- various css-->
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/node.css">
+        <link rel="stylesheet" href="css/tooltip.css">
+        <link rel="stylesheet" href="css/sidenav.css">
+        <link rel="stylesheet" href="css/line_chart.css">
+        <link rel="stylesheet" href="css/card.css">
+
+        <!-- d3 plugin -->
+        <script type="text/javascript" src="js/d3.v3.min.js"></script>
+        <script type="text/javascript" src="js/d3-queue.v3.min.js"></script>
+
+        <!-- functionality -->
+        <script type="text/javascript" src="js/sidenav.js"></script>
+        <script type="text/javascript" src="js/legends.js"></script>
+        <script type="text/javascript" src="js/heat_map.js"></script>
+        <script type="text/javascript" src="js/chart.js"></script>
+        <script type="text/javascript" src="js/add_remove.js"></script>
+        <script type="text/javascript" src="js/home_tab.js"></script>
+        <script type="text/javascript" src="js/node_tab.js"></script>
+        <script type="text/javascript" src="js/search.js"></script>
+        <script type="text/javascript" src="js/circle_pack.js"></script>
+        <script type="text/javascript" src="js/force_layout.js"></script>
+
+    </head>
+
+    <body>
+
+        <!-- create circle pack and button area -->
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="button-area">
+                            <button type="button" class="btn btn-default" onclick="openNav()">SideNav</button>
+                            <button type="button" class="btn btn-default" onclick="circlePack()">CirclePack</button>
+                            <button type="button" class="btn btn-default" id="force_button" onclick="forceLayout()">ForceLayout</button>
+                            <input type="text" placeholder="Search.." id="tipue_search_input">
+                        </div>
+                    </div>
+                </div>
+                <div id="vis_area"></div>
+            </div>
+        </div>
+
+        <!-- create sidenav -->
+        <div class="sidenav" id="mySidenav">
+            <div class="container-fluid">
+
+                <!-- tab names -->
+                <div class="row">
+                    <div class="col-sm-1">
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    </div>
+                    <div class="col-sm-11">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true" onclick="updateHomeTab()">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="node-tab" data-toggle="tab" href="#node" role="tab" aria-controls="node" aria-selected="false" onclick="updateNodeTab()">Node</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="misc-tab" data-toggle="tab" href="#misc" role="tab" aria-controls="misc" aria-selected="false">Misc</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- tab contents -->
+                <div class="row">
+                    <div class="tab-content" id="myTabContent">
+
+                        <!-- tab for distributions -->
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"></div>
+
+                        <!-- tab for node metadata -->
+                        <div class="tab-pane fade" id="node" role="tabpanel" aria-labelledby="node-tab"></div>
+
+                        <!-- tbd -->
+                        <div class="tab-pane fade" id="misc" role="tabpanel" aria-labelledby="misc-tab"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- load javascript code -->
+        <script type="text/javascript" src="js/main.js"></script>
+    </body>
+
+</html>

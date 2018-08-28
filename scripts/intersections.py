@@ -20,7 +20,7 @@ VERTEXID = 'data/indexRevDict.json'                   # original vertex id
 
 # output files
 INTEPATH = 'data/intersections.json'       # intersection file
-FORCPATH = 'graph_force.json'         # formatted intersection file
+FORCPATH = 'graphForce.json'         # formatted intersection file
 
 #Change these values if needed
 CREATE_INTERFILE = True     #true or false
@@ -36,7 +36,7 @@ def getVertexIds(npath, dpath):
     #open index rev dictionary file
     with open(dpath) as file:
         json_data = json.load(file)
-        file.close
+        file.close()
 
     #open the nucli file and obtain the vertex ids
     #and change the ids to the real one

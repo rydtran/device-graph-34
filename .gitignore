@@ -2,7 +2,10 @@ graphIndexed.mtx_34_circle.json
 graphIndexed.mtx_34_NUCLEI
 graphOmaha
 graphIndexed.mtx
-graph_circle.json
-graph_force.json
+graphCircle.json
+graphForce.json
 indexDict.json
 indexRevDict.json
+main.pyc
+graphIndexed.mtx.bin
+.DS_Store

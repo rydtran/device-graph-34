@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+import shutil
 
 THRESHOLD = int(sys.argv[1]) 
 
@@ -12,8 +13,10 @@ OUTPATH   = 'data/nodes/'
 
 def assure_path_exists(path):
     dir_path = os.path.dirname(path)
-    if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
+    if not os.path.exist(dir_path):
+        os.makedirs(dir_path)
+    else os.path.exists(dir_path):
+        shutil.rmtree(path)
 
 def openIndexFile():
     with open(INDEXPATH, 'r') as index_file:

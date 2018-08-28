@@ -1,5 +1,5 @@
-var circle_path = "graph_circle.json"
-var force_path = "graph_force.json"
+var circle_path = "graphCircle.json"
+var force_path = "graphForce.json"
 var CIRCLE_DATA,
     FORCE_DATA;
 

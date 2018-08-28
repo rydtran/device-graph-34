@@ -40,7 +40,7 @@ def main():
             count+=1
             json_str = ''.join([formatEntry(filename),'\n' if count == len(os.listdir(NODEFILES)) else ',\n'])
             entry_str = ''.join([entry_str, json_str])
-            if count%1000 == 0:
+            if count%1000 is 0:
                 print("\t {0}".format(count))
         outfile.write(entry_str)
         outfile.write(']};')

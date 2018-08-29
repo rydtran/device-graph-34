@@ -9,3 +9,4 @@ indexRevDict.json
 main.pyc
 graphIndexed.mtx.bin
 .DS_Store
+intersections.json

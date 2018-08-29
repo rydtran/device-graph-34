@@ -4,18 +4,19 @@ import os
 import sys
 import shutil
 
-THRESHOLD = int(sys.argv[1]) 
+THRESHOLD = int(sys.argv[2]) 
+ALGORITHM = sys.argv[1]
 
-NUCLIPATH = 'graphIndexed.mtx_34_NUCLEI'
-CIRCLPATH = 'graphIndexed.mtx_34_circle.json'
+NUCLIPATH = 'graphIndexed.mtx_'+ALGORITHM+'_NUCLEI'
+CIRCLPATH = 'graphIndexed.mtx_'+ALGORITHM+'_circle.json'
 INDEXPATH = 'data/indexRevDict.json'
 OUTPATH   = 'data/nodes/'
 
 def assure_path_exists(path):
     dir_path = os.path.dirname(path)
-    if not os.path.exist(dir_path):
+    if not os.path.exists(dir_path):
         os.makedirs(dir_path)
-    else os.path.exists(dir_path):
+    elif os.path.exists(dir_path):
         shutil.rmtree(path)
 
 def openIndexFile():

@@ -13,18 +13,19 @@ import json
 from itertools import combinations
 import sys
 
+#Change these values if needed
+CREATE_INTERFILE = True     #true or false
+THRESHOLD = int(sys.argv[2])
+ALGORITHM = sys.argv[1]
+
 # files necessary to create intersection file
-NUCLPATH = 'graphIndexed.mtx_34_NUCLEI'     # verticies contain in each node
-JSONPATH = 'graphIndexed.mtx_34_circle.json'    # tree structure
+NUCLPATH = 'graphIndexed.mtx_'+ALGORITHM+'_NUCLEI'     # verticies contain in each node
+JSONPATH = 'graphIndexed.mtx_'+ALGORITHM+'_circle.json'    # tree structure
 VERTEXID = 'data/indexRevDict.json'                   # original vertex id
 
 # output files
 INTEPATH = 'data/intersections.json'       # intersection file
 FORCPATH = 'graphForce.json'         # formatted intersection file
-
-#Change these values if needed
-CREATE_INTERFILE = True     #true or false
-THRESHOLD = int(sys.argv[1])
 
 #open nucli file and obtain the vertex ids for each node
 #open the reverse index file to obtain real vertex ids

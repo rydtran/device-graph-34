@@ -2,9 +2,11 @@
 #also remove unnecessary information
 
 import json
+import sys
 
-JSONPATH = 'graphIndexed.mtx_34_circle.json'
-NUCLPATH = 'graphIndexed.mtx_34_NUCLEI'
+ALGORITHM = sys.argv[1]
+JSONPATH = 'graphIndexed.mtx_'+ALGORITHM+'_circle.json'
+NUCLPATH = 'graphIndexed.mtx_'+ALGORITHM+'_NUCLEI'
 OUTPATH  = 'graphCircle.json'
 
 #open json circle file for modification

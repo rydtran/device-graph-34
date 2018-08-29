@@ -86,7 +86,7 @@ def getEdges(mpath, orig_ids):
     edges = {}
     count = 0
     with open(mpath) as file:
-        lines = file.readlines()[1:]
+        lines = file.readlines()#[1:]
         for line in lines:
             line = line.split('\t')
             index = str(line[0])

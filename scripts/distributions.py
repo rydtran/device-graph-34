@@ -49,7 +49,42 @@ def Range_Quantity2D(Size_List, Min, Max1, Max2):
 
 
 def main():
-    Json_Path = '34de_min0.2_4.json'
+    #cleanupNUCLEI
+    inputFile=open('graphOmahaIndexed.mtx_34_NUCLEI','r')
+    outputFile=open('graphOmaha1.txt','w')
+
+    for line in inputFile:
+        words = line.split()
+        wline = words[0]+ '\t' + words[2] +'\t'+words[4]+'\t' + '\n'
+        outputFile.write(wline)
+
+    inputFile.close()
+    outputFile.close()
+
+
+    #createjson
+    FILEINPUT   = 'graphOmaha1.txt'
+    FILEOUTPUT  = 'distributioninput.json'
+
+    data = {}
+
+    with open(FILEINPUT, 'r') as fileinput:
+        lines = fileinput.readlines()
+        for line in lines:
+            entry = {}
+            infoarray = line.split('\t')
+            entry[infoarray[0]] = infoarray[1],infoarray[2]
+            data.update(entry)
+
+    fileinput.close()
+
+    with open(FILEOUTPUT, 'w') as fileoutput:
+        json.dump(data, fileoutput, indent=4)
+
+    fileoutput.close()
+
+    #Distributions
+    Json_Path = 'distributioninput.json'
     Size_Path = 'SizeDistribution.tsv'
     Density_Path = 'DensityDistribution.tsv'
     TXT_Path = 'Distribution2D.tsv'
@@ -93,8 +128,8 @@ def main():
         b=float(Json[d][1])*100
         List[1].append(b)
     TXT_Insert_A_Line(TXT_Path,"Size" + "\t" + "Density" + "\t" + "Value")
-    for i in range(5, 140, 5):
-        for j in range(0, 101, 5):
+    for i in range(0, 150, 10):
+        for j in range(0, 101, 10):
             value = Range_Quantity2D(List, 0, i, j)
     #    print("Size:0-" + str(i), value)   
             a = float(j)/100

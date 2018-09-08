@@ -1,19 +1,29 @@
 // read in distribution data and create chart
 var SIZEFILE = "data/SizeDistribution.tsv",
     DENSFILE = "data/DensityDistribution.tsv",
-    HEATFILE = "data/DistributionV2.tsv",
+    HEATFILE = "data/Distribution2D.tsv",
     INTERFILE = "data/IntersectionDistributionV2.tsv";
 
-var CIRCINFO = null;
-
 // create charts for home tag
-function updateHomeTab(){
+function updateHomeTab(flag){
 
     // if there are existing charts delete them
     removeElement("tab_info");
 
+    // incase if vis is selected and then side nav is opened
+    if(flag == undefined){
+        active = $("#vis_area").children().attr("id");
+        if(active == "circle_pack"){
+            flag = "circle";
+        }else if(active == "force_layout"){
+            flag = "force";
+        }else{
+            return;
+        };
+    };
+
     var html = '';
-    if (CIRCINFO == true){
+    if (flag == "circle"){
         html = 
                 '<div class="row">' +
                     '<div class="card">' +
@@ -52,7 +62,7 @@ function updateHomeTab(){
         loadSize();
         loadDens();
         loadHeat();
-    }else if(CIRCINFO == false){
+    }else if(flag == "force"){
         html = 
                 '<div class="row">' +
                     '<div class="card">' +
@@ -64,6 +74,8 @@ function updateHomeTab(){
         // append the charts to html
         addElement("home", "div", "container-fluid", "tab_info", html);
         loadInter();
+    }else{
+        return;
     }
 }
 

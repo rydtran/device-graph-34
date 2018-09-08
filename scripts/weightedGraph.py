@@ -1,4 +1,4 @@
-#requires nuclei file, mtx file, reverse index file
+#requires nuclei file, mtx file, and index file
 
 
 import json
@@ -6,9 +6,9 @@ from Queue import Queue as queue
 import sys
 
 NUCPATH = '../graphIndexed.mtx_34_NUCLEI'
-INDPATH = '../data/indexRevDict.json'
+INDPATH = '../data/indexDict.json'
 MTXPATH = '../graphIndexed.mtx'
-OUTPATH = '../graph_weighted.json'
+OUTPATH = '../graphWeighted.json'
 THRESHOLD = int(sys.argv[1])
 PRINT_COUNT_V = 100000
 PRINT_COUNT_E = 1000000
@@ -19,14 +19,14 @@ def getOriginalIds(ipath):
     #RET: dict: key   = new id
     #           value = original id
 
-    #open index rev dictionary file
+    #open index dictionary file
     with open(ipath) as file:
         json_data = json.load(file)
         file.close()
 
         return json_data
 
-#takes in the nuclei path and rev index file
+#takes in the nuclei path and index file
 def getVertexIds(npath, orig_ids, threshold):
     #ARG: string paths
     #RET: dict: key   = node id
@@ -112,6 +112,11 @@ def getEdges(mpath, orig_ids):
 
         file.close()
         print('\tEdges loaded')
+
+        with open('adjacencyList.json', 'w') as outfile:
+            json.dump(edges, outfile)
+            outfile.close()
+
         return edges
 
 def createWeightedGraph(opath, nodes, rev_nodes, edges):
@@ -130,44 +135,39 @@ def createWeightedGraph(opath, nodes, rev_nodes, edges):
     visited = {}
     q = queue()
 
-    s = nodes.keys()[0]
-    q.put(s)
-    visited[s] = True
-    graph[s] = {}
+    for node in nodes.keys():
+        visited[node] = False
 
-    while(not q.empty()):
-        node = q.get()
-
-        if node not in visited:
+    for node in nodes.keys():
+        if not visited[node]:
+            q.put(node)
+            visited[node] = True
             graph[node] = {}
 
-        #we want to create a new graph where if there exist an
-        #edge between vertices in a node then create an edge
-        #between the two nodes.
-        #the weight of the edge is equal to the number of
-        #edges that exist between two nodes
-        for aVertex in nodes[node]: #every vertex (a) in a node
-            for bVertex in edges[aVertex]: #get the vertex b connected to vertex a
-                for onode in rev_nodes[bVertex]: #get every node that contains that vertex (b)
-                    if onode not in graph[node]: #increase the weight between node and onode
-                        graph[node][onode] = 1
-                    else:
-                        graph[node][onode] += 1  #add this edge
-                    if onode not in visited:     #push to queue if not seen before
-                        visited[onode] = True
-                        q.put(onode)
+            while(not q.empty()):
+                start = q.get()
+
+                for aVertex in nodes[start]:
+                    for bVertex in edges[aVertex]:
+                        if bVertex in rev_nodes:
+                            for onode in rev_nodes[bVertex]:
+                                if onode not in graph[start]:
+                                    graph[start][onode] = 1
+                                else:
+                                    graph[start][onode] += 1
+                                if not visited[onode]:
+                                    graph[onode] = {}
+                                    q.put(onode)
+                                    visited[onode] = True
 
     with open(opath, 'w') as file:
         json.dump(graph, file, indent='4')
-        file.close()
-    return graph
+        file.close()  
 
 def main():
     orig_ids = getOriginalIds(INDPATH)
-    nodes, rev_nodes = getVertexIds(NUCPATH, orig_ids, THRESHOLD)
+    #nodes, rev_nodes = getVertexIds(NUCPATH, orig_ids, THRESHOLD)
     edges = getEdges(MTXPATH, orig_ids)
-    print(edges)
-    graph = createWeightedGraph(OUTPATH, nodes, rev_nodes, edges)
-    print(graph)
+    #createWeightedGraph(OUTPATH, nodes, rev_nodes, edges)
 if __name__ == '__main__':
     main()

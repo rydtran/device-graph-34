@@ -4,7 +4,6 @@ import sys
 inputFile=open(sys.argv[1],'r')
 outputFile=open('graphIndexed.mtx','w')
 outputFileDict = open('data/indexDict.json','w')
-fileRevDict = open('data/indexRevDict.json', 'w')
 
 d={}
 r={}
@@ -39,13 +38,9 @@ for line in inputFile:
 			wline = str(d[words[0]])+'\t'+str(d[words[1]])+'\n'
 			outputFile.write(wline)
 
-jsond = json.dumps(d)
+jsond = json.dumps(r)
 outputFileDict.write(jsond)
-
-jsonr = json.dumps(r)
-fileRevDict.write(jsonr)
 
 inputFile.close()
 outputFile.close()
 outputFileDict.close()
-fileRevDict.close()

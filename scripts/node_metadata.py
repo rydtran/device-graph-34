@@ -9,7 +9,7 @@ ALGORITHM = sys.argv[1]
 
 NUCLIPATH = 'graphIndexed.mtx_'+ALGORITHM+'_NUCLEI'
 CIRCLPATH = 'graphIndexed.mtx_'+ALGORITHM+'_circle.json'
-INDEXPATH = 'data/indexRevDict.json'
+INDEXPATH = 'data/indexDict.json'
 OUTPATH   = 'data/nodes/'
 
 def assure_path_exists(path):
@@ -18,6 +18,7 @@ def assure_path_exists(path):
         os.makedirs(dir_path)
     elif os.path.exists(dir_path):
         shutil.rmtree(path)
+        os.makedirs(dir_path)
 
 def openIndexFile():
     with open(INDEXPATH, 'r') as index_file:

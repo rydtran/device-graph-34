@@ -2,7 +2,7 @@ function create_legend(target){
 
 	var parent_width = $(target).parent().width();
 
-	var margin = {top: 00, right: 10, bottom: 20, left: 10},
+	var margin = {top: 0, right: 10, bottom: 20, left: 10},
 	    width = parent_width - 15 - margin.left - margin.right,
 	    height = screen.height/14 - margin.top - margin.bottom;
 

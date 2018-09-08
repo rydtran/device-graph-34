@@ -1,39 +1,26 @@
-function forceLayout(){
+function weightedLayout(){
     
-    // remove the force layout
+    // remove the force layout or circle pack
     removeElement("circle_pack");
-    removeElement("weighted_layout");
+    removeElement("force_layout");
 
-    // if user tries to create another force_layout
-    var old = document.getElementById("force_layout");
+    // if user tries to create another weighted_layout
+    var old = document.getElementById("weighted_layout");
     if(old != null) return;
 
-    updateTab("force");
+    updateTab("weighted");
 
-    var html = '<div id="force_layout"></div>';
-    addElement("vis_area","div","row","force_layout",html);    
+    var html = '<div id="weighted_layout"></div>';
+    addElement("vis_area","div","row","weighted_layout",html);    
 
     var graph = FORCE_DATA;
 
     var w = window.innerWidth,
         h = window.innerHeight;
 
-    var keyc = true, 
-        keys = true, 
-        keyt = true, 
-        keyr = true, 
-        keyx = true, 
-        keyd = true, 
-        keyl = true, 
-        keym = true, 
-        keyh = true, 
-        key1 = true, 
-        key2 = true, 
-        key3 = true, 
-        key0 = true;
+    var keyc = true, keys = true, keyt = true, keyr = true, keyx = true, keyd = true, keyl = true, keym = true, keyh = true, key1 = true, key2 = true, key3 = true, key0 = true
 
-    var focus_node = null, 
-        highlight_node = null;
+    var focus_node = null, highlight_node = null;
 
     var text_center = false;
     var outline = false;
@@ -45,9 +32,8 @@ function forceLayout(){
         .domain([min_score, (min_score+max_score)/2, max_score])
         .range(["lime", "yellow", "red"]);
 
-    var highlight_color = "blue",
-        highlight_trans = 0.1,
-        search_highlight = "yellow";
+    var highlight_color = "blue";
+    var highlight_trans = 0.1;
       
     var size = d3.scale.log()
         .domain([1,30])
@@ -58,16 +44,17 @@ function forceLayout(){
         .charge(-300)
         .size([w,h]);
 
-    var force_tooltip = d3.select("#force_layout").append("div")   
+    var force_tooltip = d3.select("#weighted_layout").append("div")   
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var link_tooltip = d3.select("#force_layout").append("div")   
+    var link_tooltip = d3.select("#weighted_layout").append("div")   
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var default_node_color = "gainsboro",
-        default_link_color = "#888",
+    var default_node_color = "gainsboro";
+    //var default_node_color = "rgb(3,190,100)";
+    var default_link_color = "#888",
         nominal_base_node_size = 10,
         nominal_text_size = 10,
         max_text_size = 24,
@@ -75,18 +62,18 @@ function forceLayout(){
         max_stroke = 4.5,
         max_base_node_size = 36,
         min_zoom = 0.1,
-        max_zoom = 7;
-
-    var svg = d3.select("#force_layout").append("svg")
-        .style("cursor", "move");
+        max_zoom = 7,
+        svg = d3.select("#weighted_layout").append("svg"),
         zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom]),
         g = svg.append("g");
 
-    // a dictionary of links
+    svg.style("cursor","move");
+
     var linkedByIndex = {};
-        graph.links.forEach(function(d) {
-            linkedByIndex[d.source + "," + d.target] = true;
-        });
+
+    graph.links.forEach(function(d) {
+        linkedByIndex[d.source + "," + d.target] = true;
+    });
 
     function isConnected(a, b) {
         return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
@@ -131,34 +118,16 @@ function forceLayout(){
         .data(graph.nodes)
         .enter().append("g")
         .attr("class", "node")
-        .attr("id", function(d){
-            return "c" + d.id;
-        })
         .call(force.drag)
-        .on("dblclick.zoom", function(d) { 
-            d3.event.stopPropagation();
-            var dcx = (window.innerWidth/2-d.x*zoom.scale()),
-                dcy = (window.innerHeight/2-d.y*zoom.scale());
-            zoom.translate([dcx,dcy]);
-            g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
-        })
-        .on("mouseover", function(d) {
-            set_highlight(d);
-            showForceTooltip(this,d);
-        })
-        .on("mousedown", function(d) { 
-            d3.event.stopPropagation();
-            focus_node = d;
-            set_focus(d);
-            if (highlight_node === null) set_highlight(d);
-        })
-        .on("mouseout", function(d) {
-            exit_highlight();
-            hideForceTooltip();
-        })
-        .on("click", function(d) {
-            loadNodeData(d.id);
-        });
+
+        
+    node.on("dblclick.zoom", function(d) { 
+        d3.event.stopPropagation();
+        var dcx = (window.innerWidth/2-d.x*zoom.scale()),
+            dcy = (window.innerHeight/2-d.y*zoom.scale());
+        zoom.translate([dcx,dcy]);
+        g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
+    });
     
     var tocolor = "fill";
     var towhite = "stroke";
@@ -185,12 +154,30 @@ function forceLayout(){
         .attr("dy", ".35em")
         .style("font-size", nominal_text_size + "px")
 
-    if (text_center)
-        text.text(function(d) { return d.id; })
-            .style("text-anchor", "middle");
-    else 
+        if (text_center)
+         text.text(function(d) { return d.id; })
+        .style("text-anchor", "middle");
+        else 
         text.attr("dx", function(d) {return (size(d.size)||nominal_base_node_size);})
-            .text(function(d) { return '\u2002'+d.id; });
+        .text(function(d) { return '\u2002'+d.id; });
+
+    node.on("mouseover", function(d) {
+            set_highlight(d);
+            showForceTooltip(this,d);
+        })
+        .on("mousedown", function(d) { 
+            d3.event.stopPropagation();
+            focus_node = d;
+            set_focus(d);
+            if (highlight_node === null) set_highlight(d);
+        })
+        .on("mouseout", function(d) {
+            exit_highlight();
+            hideForceTooltip();
+        })
+        .on("click", function(d) {
+            loadNodeData(d.id);
+        });
 
     d3.select(window).on("mouseup", function() {
         if (focus_node!==null){
@@ -209,9 +196,7 @@ function forceLayout(){
         if (focus_node===null){
             svg.style("cursor","move");
             if (highlight_color!="white"){
-                circle.style(towhite, function(d){
-                    return TIPUE_LOCATIONS.includes(d.id) ? search_highlight : "white";
-                });
+                circle.style(towhite, "white");
                 text.style("font-weight", "normal");
                 link.style("stroke","gray")
             }
@@ -220,46 +205,43 @@ function forceLayout(){
     }
 
     function set_focus(d){   
-        if (highlight_trans<1)  {
-            circle.style("opacity", function(o) {
+    if (highlight_trans<1)  {
+        circle.style("opacity", function(o) {
                     return isConnected(d, o) ? 1 : highlight_trans;
                 });
 
-            text.style("opacity", function(o) {
-                return isConnected(d, o) ? 1 : highlight_trans;
-            });
-            
-            link.style("opacity", function(o) {
-                return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
-            });     
+                text.style("opacity", function(o) {
+                    return isConnected(d, o) ? 1 : highlight_trans;
+                });
+                
+                link.style("opacity", function(o) {
+                    return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
+                });     
         }
     }
 
-    function set_highlight(d){
+
+    function set_highlight(d)
+    {
         svg.style("cursor","pointer");
         if (focus_node!==null) d = focus_node;
         highlight_node = d;
 
-        if (highlight_color!="white"){
-            circle.style(towhite, function(o) {
-                    if(isConnected(d,o)){
-                        console.log(TIPUE_LOCATIONS, d.id, o.id);
-                    };
-                    return isConnected(d, o) ? highlight_color : 
-                    TIPUE_LOCATIONS.includes(o.id) ? search_highlight : "white";
-                })
-                .style("stroke-width", nominal_stroke);
-            text.style("font-weight", function(o) {
-                    return isConnected(d, o) ? "bold" : "normal";
-                });
-            link.style("stroke", function(o) {
-                    return o.source.index == d.index || o.target.index == d.index ? highlight_color : "gray";
+        if (highlight_color!="white")
+        {
+              circle.style(towhite, function(o) {
+                    return isConnected(d, o) ? highlight_color : "white";});
+                text.style("font-weight", function(o) {
+                    return isConnected(d, o) ? "bold" : "normal";});
+                link.style("stroke", function(o) {
+                  return o.source.index == d.index || o.target.index == d.index ? highlight_color : "gray";
+
                 });
         }
     }
         
         
-    zoom.on("zoom", function() {
+      zoom.on("zoom", function() {
       
         var stroke = nominal_stroke;
         if (nominal_stroke*zoom.scale()>max_stroke) stroke = max_stroke/zoom.scale();
@@ -280,77 +262,76 @@ function forceLayout(){
         text.style("font-size",text_size + "px");
 
         g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    });
+        });
          
-    svg.call(zoom);     
+      svg.call(zoom);     
         
-    resize();
+      resize();
       //window.focus();
-    d3.select(window).on("resize", resize).on("keydown", keydown);
+      d3.select(window).on("resize", resize).on("keydown", keydown);
           
-    force.on("tick", function() {
+      force.on("tick", function() {
         
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
         text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
       
         link.attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
-
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+            
         node.attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; });
-    });
+          .attr("cy", function(d) { return d.y; });
+        });
       
-    function resize() {
+      function resize() {
         var width = window.innerWidth, height = window.innerHeight;
         svg.attr("width", width).attr("height", height);
-
+        
         force.size([force.size()[0]+(width-w)/zoom.scale(),force.size()[1]+(height-h)/zoom.scale()]).resume();
         w = width;
         h = height;
-    };
+        }
         
-    function keydown() {
-        if (d3.event.keyCode==32) {force.stop();}
-        else if (d3.event.keyCode>=48 && d3.event.keyCode<=90 && !d3.event.ctrlKey && !d3.event.altKey && !d3.event.metaKey){
-            switch (String.fromCharCode(d3.event.keyCode)) {
-                case "C": keyc = !keyc; break;
-                case "S": keys = !keys; break;
-                case "T": keyt = !keyt; break;
-                case "R": keyr = !keyr; break;
-                case "X": keyx = !keyx; break;
-                case "D": keyd = !keyd; break;
-                case "L": keyl = !keyl; break;
-                case "M": keym = !keym; break;
-                case "H": keyh = !keyh; break;
-                case "1": key1 = !key1; break;
-                case "2": key2 = !key2; break;
-                case "3": key3 = !key3; break;
-                case "0": key0 = !key0; break;
-            }
+        function keydown() {
+        if (d3.event.keyCode==32) {  force.stop();}
+        else if (d3.event.keyCode>=48 && d3.event.keyCode<=90 && !d3.event.ctrlKey && !d3.event.altKey && !d3.event.metaKey)
+        {
+      switch (String.fromCharCode(d3.event.keyCode)) {
+        case "C": keyc = !keyc; break;
+        case "S": keys = !keys; break;
+        case "T": keyt = !keyt; break;
+        case "R": keyr = !keyr; break;
+        case "X": keyx = !keyx; break;
+        case "D": keyd = !keyd; break;
+        case "L": keyl = !keyl; break;
+        case "M": keym = !keym; break;
+        case "H": keyh = !keyh; break;
+        case "1": key1 = !key1; break;
+        case "2": key2 = !key2; break;
+        case "3": key3 = !key3; break;
+        case "0": key0 = !key0; break;
+      }
         
-            link.style("display", function(d) {
-                var flag  = vis_by_type(d.source.type)&&vis_by_type(d.target.type)&&vis_by_node_score(d.source.score)&&vis_by_node_score(d.target.score)&&vis_by_link_score(d.score);
-                linkedByIndex[d.source.index + "," + d.target.index] = flag;
-                return flag?"inline":"none";
-            });
-            node.style("display", function(d) {
-                return (key0||hasConnections(d))&&vis_by_type(d.type)&&vis_by_node_score(d.score)?"inline":"none";
-            });
-            text.style("display", function(d) {
-                return (key0||hasConnections(d))&&vis_by_type(d.type)&&vis_by_node_score(d.score)?"inline":"none";
-            });
-                            
-            if (highlight_node !== null){
-                if ((key0||hasConnections(highlight_node))&&vis_by_type(highlight_node.type)&&vis_by_node_score(highlight_node.score)) { 
-                if (focus_node!==null) set_focus(focus_node);
-                set_highlight(highlight_node);
-                }
-                else {exit_highlight();}
-            }
+      link.style("display", function(d) {
+                    var flag  = vis_by_type(d.source.type)&&vis_by_type(d.target.type)&&vis_by_node_score(d.source.score)&&vis_by_node_score(d.target.score)&&vis_by_link_score(d.score);
+                    linkedByIndex[d.source.index + "," + d.target.index] = flag;
+                  return flag?"inline":"none";});
+      node.style("display", function(d) {
+                    return (key0||hasConnections(d))&&vis_by_type(d.type)&&vis_by_node_score(d.score)?"inline":"none";});
+      text.style("display", function(d) {
+                    return (key0||hasConnections(d))&&vis_by_type(d.type)&&vis_by_node_score(d.score)?"inline":"none";});
+                    
+                    if (highlight_node !== null)
+                    {
+                        if ((key0||hasConnections(highlight_node))&&vis_by_type(highlight_node.type)&&vis_by_node_score(highlight_node.score)) { 
+                        if (focus_node!==null) set_focus(focus_node);
+                        set_highlight(highlight_node);
+                        }
+                        else {exit_highlight();}
+                    }
 
-        }   
+    }   
     }
 
     function vis_by_type(type){
@@ -434,44 +415,4 @@ function forceLayout(){
     function hideLinkTooltip(){
         link_tooltip.transition().duration(200).style("opacity", 0)
     };
-
-    function highlight_searched(location){
-        if (location.length == 0){
-            alert("No Results");
-            svg.selectAll(".node")
-                .style("stroke", "white");
-        }else{
-            for(var i = 0; i < location.length; i ++){
-                circle.style("stroke", function(d){
-                        return location.includes(d.id) ? search_highlight : "white";
-                    });
-            };
-        };
-    };
-
-    function tipueKeyup(e){
-        if (e.keyCode == 13) {
-            function locations_loaded(){
-                if(LOCATIONS_FOUND == false){
-                    window.setTimeout(locations_loaded(),100);
-                }else{
-                    console.log(TIPUE_LOCATIONS);
-                    highlight_searched(TIPUE_LOCATIONS);
-                    LOCATIONS_FOUND = false;
-                };
-            };
-            locations_loaded();
-        };
-    };
-
-    $("#tipue_search_input").bind('keyup', tipueKeyup);
-
-    $("#circle_button").on("click", function(){
-        $("#tipue_search_input").unbind('keyup', tipueKeyup);
-        svg.selectAll(".links", ".nodes")
-            .on("mouseover", null);
-    });
-    $("#weighted_button").on("click", function(){
-        $("#tipue_search_input").unbind('keyup', tipueKeyup);
-    });
 }

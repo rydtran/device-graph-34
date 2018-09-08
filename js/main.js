@@ -11,6 +11,21 @@ d3.queue()
     .await(function(error, data1, data2){
         if(error) throw error;
         CIRCLE_DATA = data1;
-        FORCE_DATA = data2
+        FORCE_DATA = data2;
         removeElement("loading_text")
     });
+
+function updateTab(source){
+
+	active_tab = $('.nav-tabs .active > a').attr('id');
+
+	if(active_tab == "home-tab"){
+		updateHomeTab(source)
+	}else if(active_tab == "node-tab"){
+		updateNodeTab()
+	}else if(active_tab == "misc-tab"){
+		return
+	}else{
+		console.log(active_tab);
+	};
+};

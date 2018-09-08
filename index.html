@@ -36,6 +36,7 @@
         <script type="text/javascript" src="js/legends.js"></script>
         <script type="text/javascript" src="js/heat_map.js"></script>
         <script type="text/javascript" src="js/chart.js"></script>
+        <script type="text/javascript" src="js/histogram.js"></script>
         <script type="text/javascript" src="js/add_remove.js"></script>
         <script type="text/javascript" src="js/home_tab.js"></script>
         <script type="text/javascript" src="js/node_tab.js"></script>
@@ -43,6 +44,7 @@
         <script type="text/javascript" src="js/search.js"></script>
         <script type="text/javascript" src="js/circle_pack.js"></script>
         <script type="text/javascript" src="js/force_layout.js"></script>
+        <!-- <script type="text/javascript" src="js/weighted_layout.js"></script> -->
 
     </head>
 
@@ -55,8 +57,9 @@
                     <div class="col">
                         <div class="button-area">
                             <button type="button" class="btn btn-default" onclick="openNav()">SideNav</button>
-                            <button type="button" class="btn btn-default" onclick="circlePack()">CirclePack</button>
+                            <button type="button" class="btn btn-default" id="circle_button" onclick="circlePack()">CirclePack</button>
                             <button type="button" class="btn btn-default" id="force_button" onclick="forceLayout()">ForceLayout</button>
+<!--                             <button type="button" class="btn btn-default" id="weighted_button" onclick="weightedLayout()">WeightedLayout</button> -->
                             <input type="text" placeholder="Search.." id="tipue_search_input">
                         </div>
                     </div>

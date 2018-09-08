@@ -3,19 +3,17 @@
 // uses global variable "LOCATIONS_FOUND" from search.js
 // uses global variable "TIPUE_LOCATIONS" from search.js
 
-var circle_svg;
-
 function circlePack(){
 
-    // remove the force layout
+    // remove the force or weighted layout
     removeElement("force_layout");
+    removeElement("weighted_layout");
 
     // if user tries to create another circle pack
     var old = document.getElementById("circle_pack");
     if(old != null) return;
 
-    CIRCINFO = true;
-    updateHomeTab();
+    updateTab("circle");
 
     var html = '<div id="circle_pack"></div>';
     addElement("vis_area","div","row","circle_pack",html);
@@ -134,46 +132,6 @@ function circlePack(){
             .style("stroke-width", 4);
     };
 
-    function highlight_searched(location){
-        if (location.length == 0){
-            alert("No Results");
-            svg.selectAll(".node", ".node node--leaf")
-                .style("stroke-width", 0)
-                .style("stroke", "white");
-        }else{
-            for(var i = 0; i < location.length; i ++){
-                svg.selectAll(".node", ".node node--leaf")
-                    .style("stroke-width", 0)
-                    .style("stroke", "white");
-                svg.select("#c"+location[i])
-                    .style("stroke", "yellow")
-                    .style("stroke-width", 4);
-            };
-        };
-    };
-
-    function tipueKeyup(e){
-        if (e.keyCode == 13) {
-            function locations_loaded(){
-                if(LOCATIONS_FOUND == false){
-                    window.setTimeout(locations_loaded(),100);
-                }else{
-                    console.log(TIPUE_LOCATIONS);
-                    highlight_searched(TIPUE_LOCATIONS);
-                    TIPUE_LOCATIONS = [];
-                    LOCATIONS_FOUND = false;
-                };
-            };
-            locations_loaded();
-        };
-    };
-
-    $("#tipue_search_input").bind('keyup', tipueKeyup);
-
-    $("#force_button").on("click", function(){
-        $("#tipue_search_input").unbind('keyup', tipueKeyup);
-    });
-
     d3.select(self.frameElement).style("height", outerDiameter + "px");
 
     function showCircleTooltip(c, node){
@@ -203,4 +161,45 @@ function circlePack(){
     function hideCircleTooltip(){
         circle_tooltip.transition().duration(200).style("opacity", 0);
     };
+    function highlight_searched(location){
+        if (location.length == 0){
+            alert("No Results");
+            svg.selectAll(".node", ".node node--leaf")
+                .style("stroke-width", 0)
+                .style("stroke", "white");
+        }else{
+            for(var i = 0; i < location.length; i ++){
+                svg.selectAll(".node", ".node node--leaf")
+                    .style("stroke-width", 0)
+                    .style("stroke", "white");
+                svg.select("#c"+location[i])
+                    .style("stroke", "yellow")
+                    .style("stroke-width", 4);
+            };
+        };
+    };
+
+    function tipueKeyup(e){
+        if (e.keyCode == 13) {
+            function locations_loaded(){
+                if(LOCATIONS_FOUND == false){
+                    window.setTimeout(locations_loaded(),100);
+                }else{
+                    console.log(TIPUE_LOCATIONS);
+                    highlight_searched(TIPUE_LOCATIONS);
+                    LOCATIONS_FOUND = false;
+                };
+            };
+            locations_loaded();
+        };
+    };
+
+    $("#tipue_search_input").bind('keyup', tipueKeyup);
+
+    $("#force_button").on("click", function(){
+        $("#tipue_search_input").unbind('keyup', tipueKeyup);
+    });
+    $("#weighted_button").on("click", function(){
+        $("#tipue_search_input").unbind('keyup', tipueKeyup);
+    });
 };

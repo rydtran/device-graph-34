@@ -10,6 +10,7 @@ function found_callback(){
 }
 
 function found_locations(results, callback){
+	TIPUE_LOCATIONS = [];
 	for(var i = 0; i < results.length; i++){
 		TIPUE_LOCATIONS.push(results[i]['title']);
 	};

@@ -12,3 +12,7 @@ text {
 .button-area {
 	margin: 10px;
 }
+
+div.c {
+    text-align: center;
+}

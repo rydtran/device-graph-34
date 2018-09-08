@@ -21,20 +21,20 @@ ALGORITHM = sys.argv[1]
 # files necessary to create intersection file
 NUCLPATH = 'graphIndexed.mtx_'+ALGORITHM+'_NUCLEI'     # verticies contain in each node
 JSONPATH = 'graphIndexed.mtx_'+ALGORITHM+'_circle.json'    # tree structure
-VERTEXID = 'data/indexRevDict.json'                   # original vertex id
+VERTEXID = 'data/indexDict.json'                   # original vertex id
 
 # output files
 INTEPATH = 'data/intersections.json'       # intersection file
 FORCPATH = 'graphForce.json'         # formatted intersection file
 
 #open nucli file and obtain the vertex ids for each node
-#open the reverse index file to obtain real vertex ids
+#open the index file to obtain real vertex ids
 def getVertexIds(npath, dpath):
     #ARG: string path
     #RET: dict: key   = node id
     #           value = array of vertex ids
 
-    #open index rev dictionary file
+    #open index dictionary file
     with open(dpath) as file:
         json_data = json.load(file)
         file.close()
@@ -87,7 +87,7 @@ def getTreeStruct(path, threshold):
         print("\tTree loaded")
         return json_data
 
-#using the nucli, circle, and rev index file, find the intersections
+#using the nucli, circle, and index file, find the intersections
 def findIntersections(jpath, npath, dpath, threshold):
     #ARG: string path, string path
     #RET: dict: key   = vertex id,

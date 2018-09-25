@@ -17,7 +17,7 @@ function circlePack(){
 
     var html = '<div id="circle_pack"></div>';
     addElement("vis_area","div","row","circle_pack",html);
-    var root = CIRCLE_DATA;
+    var root = JSON.parse(JSON.stringify(CIRCLE_DATA));
 
     var margin = 10,
         outerDiameter = 960,
@@ -54,13 +54,54 @@ function circlePack(){
         .range(["#4eb3d3", "#fdd49e", "#fc8d59", "#d7301f", "#7f0000"])
         .interpolate(d3.interpolate);
 
-    function filter(data, size){
-        if(data.children == undefined) return;
-        data.children = data.children.filter(function(a){return (a.size>size || a.size == -1);});
-        for(var i = 0; i < data.children.length; i++){
-            filter(data.children[i], size);
+    var repose_width = 0.5,
+        repose_stroke = "LightGrey",
+        focus_width = 4,
+        focus_stroke = "white",
+        highlight_stroke = "yellow";
+
+    // function filter(data, size){
+    //     if(data.children == undefined) return;
+    //     data.children = data.children.filter(function(a){return (a.size>size || a.size == -1);});
+    //     for(var i = 0; i < data.children.length; i++){
+    //         filter(data.children[i], size);
+    //     };
+    // };
+
+    function traversal(data, size){
+        if(data.children == undefined){
+            return data.size > size ? true : false;
         }
+        else{
+            if(data.children.length == 2 && data.children[0].index == undefined){
+                target = data.children[1];
+                if(target.children == undefined){
+                    return target.size > size ? true : false;
+                }else return traversal(target.children, size);
+            };
+            if(data.size > size) return true;
+            else{
+                for(var i = 0; i < data.children.length; i++){
+                    // if(data.children[i].index == undefined) continue;
+                    // else 
+                    return traversal(data.children[i],size);
+                };
+                return false;
+            };
+        };
     }
+
+    function filter(data, size){
+        if(data.children == undefined){
+            return;
+        }
+        else{
+            data.children = data.children.filter(function(a){ return traversal(a, size);});
+            for(var i = 0; i < data.children.length; i++){
+                return filter(data.children[i], size);
+            };
+        };
+    };
 
     filter(root, 10);
     var focus = root,
@@ -76,6 +117,8 @@ function circlePack(){
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
         .attr("r", function(d) { return d.r; })
         .style("fill", function(d) { return density_color(d.color); })
+        .style("stroke-width", repose_width)
+        .style("stroke", repose_stroke)
         .on("click", function(d) { 
             selected(d);
             loadNodeData(d.index);
@@ -126,10 +169,10 @@ function circlePack(){
     function selected(d){
         var selected = d;
         d3.selectAll(".node", ".node node--leaf").filter(function(d) {return ( (d.parent !== selected && d !== selected)); })
-            .style("stroke-width", 0);
+            .style("stroke-width", repose_width);
         d3.selectAll(".node", ".node node--leaf").filter(function(d) {return ( d === selected ); })
-            .style("stroke", "white")
-            .style("stroke-width", 4);
+            .style("stroke", focus_stroke)
+            .style("stroke-width", focus_width);
     };
 
     d3.select(self.frameElement).style("height", outerDiameter + "px");
@@ -165,16 +208,17 @@ function circlePack(){
         if (location.length == 0){
             alert("No Results");
             svg.selectAll(".node", ".node node--leaf")
-                .style("stroke-width", 0)
-                .style("stroke", "white");
+                .style("stroke-width", repose_width)
+                .style("stroke", repose_stroke);
         }else{
             for(var i = 0; i < location.length; i ++){
                 svg.selectAll(".node", ".node node--leaf")
-                    .style("stroke-width", 0)
-                    .style("stroke", "white");
+                    .style("stroke-width", repose_width)
+                    .style("stroke", repose_stroke);
                 svg.select("#c"+location[i])
-                    .style("stroke", "yellow")
-                    .style("stroke-width", 4);
+                    .style("stroke", highlight_stroke)
+                    .style("stroke-width", focus_width);
+                console.log(svg.select("#c"+location[i]))
             };
         };
     };

@@ -18,8 +18,8 @@ function updateNodeTab(){
 };
 
 function loadNodeData(index){
-    //var path = "data/nodes/" + index + ".json"
-    var path = "data/sample.json";
+    var path = "data/nodes/" + index + ".json"
+    //var path = "data/sample.json";
     $('[href="#node"]').tab('show');
     d3.json(path, function(error, data){
         if(error) throw error;
@@ -52,7 +52,7 @@ function loadNodeData(index){
                             '</div>' +
                         '</div>' +
                     '</div>',
-            title = '<div class="c">Sample</div>',
+            title = '<div class="c">'+index+'</div>',
             devices = '<div class="c">Vertices</div><hr/>',
             t_edges = '<div class="c">Same Device</div><hr/>',
             f_edges = '<div class="c">Different Device</div><hr/>';
@@ -60,19 +60,20 @@ function loadNodeData(index){
         removeElement("tab_info");
         addElement("node", "div", "container-fluid", "tab_info", html);
 
-        for(var i = 0; i < data["devices"].length; i++){
-            devices += data["devices"][i] + "<br/>";
+        for(var i = 0; i < data[index].length; i++){
+            devices += data[index][i] + "<br/>";
         };
-        for(var i = 0; i < data["t-edges"].length; i++){
-            var key = Object.keys(data["t-edges"][i])[0];
-            var val = data["t-edges"][i][key];
-            t_edges += key + "\t" + val + "<br/>";
+        for(var i = 0; i < data["1"].length; i++){
+            var key = data["1"][i][0],
+                val = data["1"][i][1];
+            t_edges += key + "    " + val + "<br/>";
         };
-        for(var i = 0; i < data["f-edges"].length; i++){
-            var key = Object.keys(data["f-edges"][i])[0];
-            var val = data["f-edges"][i][key];
-            f_edges += key + "\t" + val + "<br/>";
+        for(var i = 0; i < data["0 and -1"].length; i++){
+            var key = data["0 and -1"][i][0],
+                val = data["0 and -1"][i][1];
+            f_edges += key + "    " + val + "<br/>";
         };
+        console.log(data["0 and -1"])
 
         document.getElementById("node_title").innerHTML = title;
         document.getElementById("device_list").innerHTML = devices;

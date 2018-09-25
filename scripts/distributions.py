@@ -1,6 +1,7 @@
 #coding:utf-8
 #ignore when their parents are size of 0, 10 and up
 import json
+import os
 
 #Size, Density, and 2D distributions
 # from tqdm import tqdm
@@ -134,6 +135,8 @@ def main():
     #    print("Size:0-" + str(i), value)   
             a = float(j)/100
             TXT_Insert_A_Line(TXT_Path,  str(i) + "\t" + str(a) + "\t" + str(value))
+    os.remove('distributioninput.json')
+    os.remove('graphOmaha1.txt')
 
 
 

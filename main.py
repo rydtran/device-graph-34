@@ -22,7 +22,7 @@ def main():
     # os.system('python2.7 scripts/intersections.py ' +ALGORITHM+ ' ' + THRESHOLD)
 
     print('Creating metadata files for nodes')
-    os.system('python2.7 scripts/node_metadata.py ' +ALGORITHM+ ' ' + THRESHOLD)
+    os.system('python2.7 scripts/metadata.py ' +ALGORITHM+ ' ' + THRESHOLD)
 
     # print('Creating search list for search engine') 
     # os.system('python2.7 scripts/tipue_content.py')

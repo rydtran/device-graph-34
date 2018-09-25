@@ -189,7 +189,7 @@ def forcelayout_format(fpath, intersections):
         index = 0
 
         #create a link and attach the device that results in that link
-        #count the number of time a node participates in a link
+        #count the number of times a node participates in a link
         #create indicies for every node
         for vertex, nodes in intersections.iteritems():
             for a,b in nodes:
